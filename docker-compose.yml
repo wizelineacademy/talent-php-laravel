@@ -1,0 +1,21 @@
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - 8080:80
+    volumes:
+      - ./laravel:/app
+      - ./docker/proxy/conf.d:/etc/nginx/conf.d
+    links:
+      - php:php
+  php:
+    build: ./docker/php
+    volumes:
+      - ./laravel:/app
+    links:
+      - mysql:mysql
+  mysql:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=12345
