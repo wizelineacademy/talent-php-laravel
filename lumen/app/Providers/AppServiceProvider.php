@@ -14,5 +14,16 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(\App\Providers\MongoServiceProvider::class);
+
+        $this->app->singleton(\App\Importer\Contracts\EventDataProvider::class, function () {
+            $token = config('services.eventbrite.token');
+            $client = new \GuzzleHttp\Client([
+                'base_uri' => config('services.eventbrite.base_uri'),
+                'headers' => [
+                    'Authorization' => "Bearer $token"
+                ]
+            ]);
+            return new \App\Importer\EventBrite\EventDataProvider($client);
+        });
     }
 }
