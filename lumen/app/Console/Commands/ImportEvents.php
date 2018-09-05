@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Importer\Contracts\EventDataProvider;
+use MongoDB\Client as MongoClient;
 
 class ImportEvents extends Command {
 
@@ -13,9 +14,10 @@ class ImportEvents extends Command {
 
     protected $eventDataProvider;
 
-    public function __construct(EventDataProvider $eventDataProvider) {
+    public function __construct(EventDataProvider $eventDataProvider, MongoClient $client) {
         parent::__construct();
         $this->eventDataProvider = $eventDataProvider;
+        $this->client = $client;
     }
 
     public function handle() {
@@ -23,6 +25,11 @@ class ImportEvents extends Command {
         
         $events = $this->eventDataProvider->getByLocation($location);
 
-        echo json_encode($events);
+        $eventStorage = $this->client->test->events;
+
+        $result = $eventStorage->insertMany($events);
+
+        $insertedCount = $result->getInsertedCount();
+        $this->line("Imported Events: $insertedCount");
     }
 }
