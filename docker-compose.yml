@@ -5,17 +5,18 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./laravel:/app
+      - ./lumen:/app
       - ./docker/proxy/conf.d:/etc/nginx/conf.d
     links:
       - php:php
   php:
     build: ./docker/php
     volumes:
-      - ./laravel:/app
+      - ./lumen:/app
     links:
-      - mysql:mysql
-  mysql:
-    image: mysql:latest
-    environment:
-      - MYSQL_ROOT_PASSWORD=12345
+      - mongo:mongo
+      - redis:redis
+  mongo:
+    image: mongo:latest
+  redis:
+    image: redis:latest
