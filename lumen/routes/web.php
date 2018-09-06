@@ -1,6 +1,7 @@
 <?php
 
 use MongoDB\Client as MongoClient;
+use App\Importer\Contracts\EventDataProvider;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -22,4 +23,8 @@ $router->get('/events', function (MongoClient $client) {
     $items = $cursor->toArray();
     
     return response()->json($items);
+});
+
+$router->get('/eventbrite', function (EventDataProvider $provider) {
+    return $provider->getByLocation('Guadalajara');
 });
