@@ -23,13 +23,17 @@ class EventDataProvider implements DataProvider {
         $responseData = json_decode($response->getBody()->getContents());
 
         return array_map(function ($event) {
-            return [
+            $newEvent = [
                 'name' => data_get($event, 'name.text'),
                 'description' => data_get($event, 'description.text'),
                 'url' => data_get($event, 'url'),
                 'start' => data_get($event, 'start.utc'),
-                'end' => data_get($event, 'end.utc')
+                'end' => data_get($event, 'end.utc'),
             ];
+
+            data_set($newEvent, 'metadata.venue_id', data_get($event, 'venue_id'));
+
+            return $newEvent;
         }, $responseData->events);
     }
 }
