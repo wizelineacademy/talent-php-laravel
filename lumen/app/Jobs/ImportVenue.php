@@ -5,7 +5,9 @@ namespace App\Jobs;
 use MongoDB\Client as MongoClient;
 
 class ImportVenue extends Job
-{
+{   
+    protected $venueId;
+    
     /**
      * Create a new job instance.
      *
