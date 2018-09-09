@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
+use Illuminate\Support\Facades\Queue;
 
 class ImportEvent extends Job
 {   
@@ -46,8 +47,8 @@ class ImportEvent extends Job
                 return $eventStorage->insertOne($toImport);
             }
 
-            dispatch(new ImportVenue($venueId));
-            dispatch(new ImportEvent($toImport));
+            Queue::push(new ImportVenue($venueId));
+            Queue::push(new ImportEvent($toImport));
         }
     }
 }
