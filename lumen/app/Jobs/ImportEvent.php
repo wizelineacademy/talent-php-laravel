@@ -47,6 +47,7 @@ class ImportEvent extends Job
                 return $eventStorage->insertOne($toImport);
             }
 
+            // TODO: turn this to Queues
             dispatch(new ImportVenue($venueId));
             dispatch(new ImportEvent($toImport));
         }

@@ -25,5 +25,17 @@ class AppServiceProvider extends ServiceProvider
             ]);
             return new \App\Importer\EventBrite\EventDataProvider($client);
         });
+
+        $this->app->singleton(\App\Importer\Contracts\VenueDataProvider::class, function () {
+            // TODO: Refactor Guzzle Client
+            $token = config('services.eventbrite.token');
+            $client = new \GuzzleHttp\Client([
+                'base_uri' => config('services.eventbrite.base_uri'),
+                'headers' => [
+                    'Authorization' => "Bearer $token"
+                ]
+            ]);
+            return new \App\Importer\EventBrite\VenueDataProvider($client);
+        });
     }
 }
