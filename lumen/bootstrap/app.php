@@ -80,6 +80,8 @@ $app->singleton(
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
+$app->withEloquent();
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
@@ -95,6 +97,7 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 */
 
 $app->configure('services');
+$app->configure('database');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

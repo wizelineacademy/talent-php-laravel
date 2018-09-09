@@ -1,6 +1,6 @@
 <?php
 
-use MongoDB\Client as MongoClient;
+use App\Event;
 use App\Importer\Contracts\EventDataProvider;
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +17,10 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/events', function (MongoClient $client) {
-    $eventStorage = $client->test->events;
-    $cursor = $eventStorage->find();
-    $items = $cursor->toArray();
-    
-    return response()->json($items);
+$router->get('/events', function () {
+    $events = Event::paginate(10);
+
+    return response()->json($events);
 });
 
 $router->get('/eventbrite', function (EventDataProvider $provider) {
