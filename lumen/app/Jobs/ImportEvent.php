@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
-use App\Jobs\ImportEvent;
 
 class ImportEvent extends Job
 {   

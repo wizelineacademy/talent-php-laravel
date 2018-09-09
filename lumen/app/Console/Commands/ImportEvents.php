@@ -20,12 +20,22 @@ class ImportEvents extends Command {
     }
 
     public function handle() {
+        $importedItemsCount = 0;
         $location = $this->argument('location');
-        
-        $events = $this->eventDataProvider->getByLocation($location);
 
-        foreach ($events as $event) {
-            dispatch(new \App\Jobs\ImportEvent($event));
+        $this->info("Starting Import of event in $location");
+        $this->info('Getting Info to start to import');
+        $paginationMetadata = $this->eventDataProvider->getPaginationMetadataByLocation($location);
+
+        for ($page = 1; $page <= $paginationMetadata->page_count; $page++) {
+            $this->info("Getting Page $page");
+            $events = $this->eventDataProvider->getPageByLocation($page, $location);
+            foreach ($events as $event) {
+                dispatch(new \App\Jobs\ImportEvent($event));
+            }
+            $importedItemsCount += count($events);
         }
+
+        $this->info("Event Import Completed :: Total Importted Item $importedItemsCount");
     }
 }
