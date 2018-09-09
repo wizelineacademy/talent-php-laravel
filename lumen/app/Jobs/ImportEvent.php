@@ -47,8 +47,10 @@ class ImportEvent extends Job
                 return $eventStorage->insertOne($toImport);
             }
 
-            Queue::push(new ImportVenue($venueId));
-            Queue::push(new ImportEvent($toImport));
+            Queue::bulk([
+                new ImportVenue($venueId),
+                new ImportEvent($toImport)
+            ]);
         }
     }
 }

@@ -25,9 +25,9 @@ class EventController extends Controller {
             'skip'  => (($page - 1) * $size),
             'limit' => $size
         ]);
-        $items        = $pageCursor->toArray();
         $total        = $eventStorage->countDocuments();
         $lastPage     = ceil($total/$size);
+        $items        = $pageCursor->toArray();
 
         return response()->json([
             'total'        => $total,
