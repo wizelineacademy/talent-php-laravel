@@ -13,7 +13,7 @@ class VenueDataProvider implements DataProvider {
         $this->client = $client;
     }
 
-    public function getById(int $id) {
+    public function getById(string $id) {
         $response = $this->client->get("venues/$id/");
 
         $responseData = json_decode($response->getBody()->getContents());
