@@ -1,16 +1,26 @@
 # talent-php-laravel
 
 ### Run environment.
+Copy the env file and make sure to set your `EB_TOKEN`
+```bash
+cp lumen/.env.example lumen/.env
+```
 
-Make sure to set your environment variables
-`cp lumen/.env.example lumen/.env`
 Build and start Docker containers
-`docker-compose build && docker-compose up -d`
+```bash
+docker-compose build && docker-compose up -d
+```
+
 Install the Composer dependencies
-`docker exec -it -w /app talent-php-laravel_php_1 composer install`
+```bash
+docker exec -it -w /app v3_php_1 composer install
+````
 
 ### Import Events
 Get inside the PHP container
-`docker exec -it -w /app talent-php-laravel_php_1 bash`
-`php artisan import:events {LOCATION}`
-`php artisan queue:work`
+
+```bash
+docker exec -it -w /app v3_php_1 bash
+php artisan import:events {LOCATION}
+php artisan queue:work
+```
