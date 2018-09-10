@@ -2,21 +2,15 @@
 
 ### Run environment.
 
-Create .env.
-```
-cd lumen
-cp .env.example .env
-```
-Set your `EB_TOKEN`
-Run containers.
-```
-/* Run this command to rebuild the php image with the mongo extension */
-docker-compose build
-docker-compose up
-```
+Make sure to set your environment variables
+`cp lumen/.env.example lumen/.env`
+Build and start Docker containers
+`docker-compose build && docker-compose up -d`
+Install the Composer dependencies
+`docker exec -it -w /app talent-php-laravel_php_1 composer install`
 
-### Required Env Variables.
-
-```
-MONGODB_HOST=
-```
+### Import Events
+Get inside the PHP container
+`docker exec -it -w /app talent-php-laravel_php_1 bash`
+`php artisan import:events {LOCATION}`
+`php artisan queue:work`
