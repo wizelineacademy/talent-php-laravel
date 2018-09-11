@@ -22,15 +22,13 @@ class ImportEvents extends Command {
     public function handle() {
         $location = $this->argument('location');
         $page = 1;
-        $has_more_items = true;
-        while ($has_more_items) {
+        do {
             $paginatedEvents = $this->eventDataProvider->getPaginatedByLocation($location, $page);
-            $has_more_items = $paginatedEvents->pagination->has_more_items;
             $this->info("Fetched page $page of {$paginatedEvents->pagination->page_count}");
             foreach ($paginatedEvents->events as $event) {
                 dispatch(new \App\Jobs\ImportEvent($event));
             }
             $page++;
-        }
+        } while($paginatedEvents->pagination->has_more_items);
     }
 }
