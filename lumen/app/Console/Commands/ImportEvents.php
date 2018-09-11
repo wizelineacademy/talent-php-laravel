@@ -26,6 +26,7 @@ class ImportEvents extends Command {
 
         foreach ($events as $event) {
             dispatch(new \App\Jobs\ImportEvent($event));
+            //dispatch(new \App\Jobs\ImportVenue($venueId));
         }
     }
 }
