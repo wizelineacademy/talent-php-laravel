@@ -1,6 +1,5 @@
 <?php
 
-use App\Event;
 use App\Importer\Contracts\EventDataProvider;
 /*
 |--------------------------------------------------------------------------
@@ -17,11 +16,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/events', function () {
-    $events = Event::paginate(10);
-
-    return response()->json($events);
-});
+$router->get('/events', 'EventController@index');
 
 $router->get('/eventbrite', function (EventDataProvider $provider) {
     return $provider->getByLocation('Guadalajara');
