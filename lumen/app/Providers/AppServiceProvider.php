@@ -15,7 +15,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->register(\Illuminate\Redis\RedisServiceProvider::class);
         $this->app->register(\App\Providers\MongoServiceProvider::class);
-        $this->app->register(\Jenssegers\Mongodb\MongodbServiceProvider::class);
 
         $this->app->singleton(\App\Importer\Contracts\EventDataProvider::class, function () {
             $token = config('services.eventbrite.token');
