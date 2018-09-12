@@ -1,21 +1,26 @@
 # talent-php-laravel
 
 ### Run environment.
-
-Create .env.
-```
-cd lumen
-cp .env.example .env
-```
-Run containers.
-```
-/* Run this command to rebuild the php image with the mongo extension */
-docker-compose build
-docker-compose up
+Copy the env file and make sure to set your `EB_TOKEN`
+```bash
+cp lumen/.env.example lumen/.env
 ```
 
-### Required Env Variables.
-
+Build and start Docker containers
+```bash
+docker-compose build && docker-compose up -d
 ```
-MONGODB_HOST=
+
+Install the Composer dependencies
+```bash
+docker exec -it -w /app v3_php_1 composer install
+````
+
+### Import Events
+Get inside the PHP container
+
+```bash
+docker exec -it -w /app v3_php_1 bash
+php artisan import:events {LOCATION}
+php artisan queue:work
 ```

@@ -94,6 +94,7 @@ $app->register(App\Providers\AppServiceProvider::class);
 */
 
 $app->configure('services');
+$app->configure('database');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

@@ -37,7 +37,7 @@ class ImportEvent extends Job
         if (empty($event)) {
             $venueStorage = $client->test->venues;
             $venueId = data_get($toImport, 'metadata.venue_id');
-            
+
             $venue = $venueStorage->findOne([
                 'external_id' => $venueId
             ]);

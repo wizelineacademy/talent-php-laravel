@@ -21,11 +21,14 @@ class ImportEvents extends Command {
 
     public function handle() {
         $location = $this->argument('location');
-        
-        $events = $this->eventDataProvider->getByLocation($location);
-
-        foreach ($events as $event) {
-            dispatch(new \App\Jobs\ImportEvent($event));
-        }
+        $page = 1;
+        do {
+            $paginatedEvents = $this->eventDataProvider->getPaginatedByLocation($location, $page);
+            $this->info("Fetched page $page of {$paginatedEvents->pagination->page_count}");
+            foreach ($paginatedEvents->events as $event) {
+                dispatch(new \App\Jobs\ImportEvent($event));
+            }
+            $page++;
+        } while($paginatedEvents->pagination->has_more_items);
     }
 }
