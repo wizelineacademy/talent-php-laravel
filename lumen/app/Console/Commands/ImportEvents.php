@@ -14,9 +14,10 @@ class ImportEvents extends Command {
 
     protected $eventDataProvider;
 
-    public function __construct(EventDataProvider $eventDataProvider) {
+    public function __construct(EventDataProvider $eventDataProvider ) {
         parent::__construct();
         $this->eventDataProvider = $eventDataProvider;
+       // $this->venueDataProvider = $venueDataProvider;
     }
 
     public function handle() {
@@ -26,7 +27,6 @@ class ImportEvents extends Command {
 
         foreach ($events as $event) {
             dispatch(new \App\Jobs\ImportEvent($event));
-            //dispatch(new \App\Jobs\ImportVenue($venueId));
         }
     }
 }

@@ -4,10 +4,12 @@ namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
 use App\Jobs\ImportEvent;
+use App\Importer\Contracts\VenueDataProvider;
 
 class ImportEvent extends Job
 {   
     protected $event;
+    protected $venueDataProvider;
 
     /**
      * Create a new job instance.
@@ -15,8 +17,9 @@ class ImportEvent extends Job
      * @return void
      */
     public function __construct($event)
-    {
+    {   
         $this->event = $event;
+        // $this->venueDataProvider= $venueDataProvider;
     }
 
     /**
@@ -46,9 +49,9 @@ class ImportEvent extends Job
                 data_set($toImport, 'venue', $venue);
                 return $eventStorage->insertOne($toImport);
             }
-
-            dispatch(new ImportVenue($venueId));
-            //dispatch(new ImportEvent($toImport));
+            return $eventStorage->insertOne($toImport);
+            // $venue = $this->venueDataProvider->getByID($venueId);
+            //dispatch(new ImportVenue($venueId)); 
         }
     }
 }

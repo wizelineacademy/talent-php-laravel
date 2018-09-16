@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
-use App\Importer\Contracts\VenueDataProvider;
 use App\Jobs\ImportVenue;
+use App\Importer\Contracts\VenueDataProvider;
 
 class ImportVenue extends Job
 {   
@@ -19,7 +19,9 @@ class ImportVenue extends Job
      */
     public function __construct($venueId)
     {
+       
         $this->venueId = $venueId;
+        //$this->venueDataProvider = $venueDataProvider;
     }
 
     /**
@@ -39,7 +41,7 @@ class ImportVenue extends Job
 
         if (empty($venue)) {
             /* TODO: Use VenueDataProvider */
-            //$venue = $this->venueDataProvider->getByID(data_get($toImport, 'external_id'));
+            // $venue = $this->venueDataProvider->getByID($this->venueId);
             $venue = [
                 'external_id' => $this->venueId,
                 'name' => 'Wizeline'

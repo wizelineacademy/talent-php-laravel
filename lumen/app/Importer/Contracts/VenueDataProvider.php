@@ -3,5 +3,5 @@
 namespace App\Importer\Contracts;
 
 interface VenueDataProvider {
-    public function getByID(string $location);
+    public function getByID(string $id);
 }
