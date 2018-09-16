@@ -1,9 +1,11 @@
 <?php
 
-use App\Importer\Contracts\EventDataProvider as DataProvider;
+namespace App\Importer\EventBrite;
+
+use App\Importer\Contracts\VenueDataProvider as DataProvider;
 use GuzzleHttp\Client;
 
-class EventDataProvider implements DataProvider {
+class VenueDataProvider implements DataProvider {
 
     protected $client;
 
@@ -11,12 +13,8 @@ class EventDataProvider implements DataProvider {
         $this->client = $client;
     }
 
-    public function getById(string $id) {
-        $response = $this->client->get('venues/', [
-            'query' => [
-                'id' => $id
-            ]
-        ]);
+    public function getByID(string $id) {
+        $response = $this->client->get('venues/'.$id);
 
         $responseData = json_decode($response->getBody()->getContents());
        

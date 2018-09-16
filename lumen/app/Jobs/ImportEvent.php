@@ -48,7 +48,7 @@ class ImportEvent extends Job
             }
 
             dispatch(new ImportVenue($venueId));
-            dispatch(new ImportEvent($toImport));
+            //dispatch(new ImportEvent($toImport));
         }
     }
 }
