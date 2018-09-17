@@ -40,15 +40,7 @@ class ImportEvent extends Job
         if (empty($event)) {
             $venueStorage = $client->test->venues;
             $venueId = data_get($toImport, 'metadata.venue_id');
-            
-            // $venue = $venueStorage->findOne([
-            //     'external_id' => $venueId
-            // ]);
-
-            // if (!empty($venue)) {
-            //     data_set($toImport, 'venue', $venue);
-            //     return $eventStorage->insertOne($toImport);
-            // }
+           
             return $eventStorage->insertOne($toImport);
             // $venue = $this->venueDataProvider->getByID($venueId);
             //dispatch(new ImportVenue($venueId)); 

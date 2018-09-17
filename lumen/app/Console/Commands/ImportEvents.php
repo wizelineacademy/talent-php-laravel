@@ -26,12 +26,12 @@ class ImportEvents extends Command {
         $events = $this->eventDataProvider->getByLocation($location);
 
         foreach ($events as $event) {
-            
           
             dispatch(new \App\Jobs\ImportEvent($event));
             $vid = data_get($event,"metadata.venue_id");
             $venue = $this->eventDataProvider->getByID($vid);
-            dispatch(new \App\Jobs\ImportVenue($venue));        
+            dispatch(new \App\Jobs\ImportVenue($venue));  
+                  
         }
     }
 }

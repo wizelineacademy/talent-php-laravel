@@ -19,13 +19,38 @@ $router->get('/', function () use ($router) {
 
 $router->get('/events', function (MongoClient $client) {
     $eventStorage = $client->test->events;
+    // $pipeline = array(
+    //     array(
+    //         '$lookup' => array(
+    //             "from"=> 'db.venues',
+    //             "localField"=> 'metadata.venue_id',
+    //             "foreignField"=> 'external_id',
+    //             "as"=> 'venue',
+    //         )
+    //     ),
+    // );
+    // $eventStorage->aggregate($pipeline);
     $cursor = $eventStorage->find();
     $items = $cursor->toArray();
-    array_map(function ($event) {
-        data_set($event, 'venue', data_get($event, 'venue_id'));
-    },$items);
-    
-    return response()->json($items);
+    $args = [
+        'venueStorage'=> $client->test->venues
+    ];
+    array_walk($items,function ($event,$o,$external){
+        $venue = data_get($external,'venueStorage') -> findOne( [
+            'external_id'=> data_get($event,'metadata.venue_id')
+        ]);
+        data_set($event,'venue',$venue);
+    },$args);
+
+    $formated = [
+        'total'=> 50,
+        'last_page'=> 4,
+        'current_page'=> 2,
+        'size'=> 50,
+        'items'=> $items,
+    ];
+
+    return response()->json($formated);
 });
 
 $router->get('/eventbrite', function (EventDataProvider $provider) {
