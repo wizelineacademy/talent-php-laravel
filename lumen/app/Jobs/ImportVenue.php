@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
 use App\Jobs\ImportVenue;
-use App\Importer\Contracts\VenueDataProvider;
+use App\Importer\Contracts\EventDataProvider;
 
 class ImportVenue extends Job
 {   
@@ -42,12 +42,13 @@ class ImportVenue extends Job
         if (empty($venue)) {
             /* TODO: Use VenueDataProvider */
             // $venue = $this->venueDataProvider->getByID($this->venueId);
-            $venue = [
-                'external_id' => $this->venueId,
-                'name' => 'Wizeline'
-            ];
-
-            return $venueStorage->insertOne($venue);
+            // $venue = [
+            //     'external_id' => $this->venueId,
+            //     'name' => 'Wizeline'
+            // ];
+           
         }
+        $venue = $this->venueId;
+        return $venueStorage->insertOne($venue);
     }
 }

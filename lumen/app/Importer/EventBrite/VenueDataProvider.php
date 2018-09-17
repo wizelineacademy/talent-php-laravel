@@ -23,7 +23,7 @@ class VenueDataProvider implements DataProvider {
             'address' => data_get($responseData, 'address.localized_address_display'),
         ];
 
-        data_set($newVenue, 'id', data_get($responseData, 'id'));
+        data_set($newVenue, 'external_id', data_get($responseData, 'id'));
 
         return $newVenue;
     }

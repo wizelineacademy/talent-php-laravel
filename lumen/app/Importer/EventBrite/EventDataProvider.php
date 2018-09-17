@@ -37,4 +37,19 @@ class EventDataProvider implements DataProvider {
             return $newEvent;
         }, $responseData->events);
     }
+
+    public function getByID(string $id) {
+        $response = $this->client->get('venues/'.$id);
+
+        $responseData = json_decode($response->getBody()->getContents());
+       
+        $newVenue = [
+            'name' => data_get($responseData, 'name'),
+            'address' => data_get($responseData, 'address.localized_address_display'),
+        ];
+
+        data_set($newVenue, 'id', data_get($responseData, 'id'));
+
+        return $newVenue;
+    }
 }
