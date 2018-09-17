@@ -21,6 +21,9 @@ $router->get('/events', function (MongoClient $client) {
     $eventStorage = $client->test->events;
     $cursor = $eventStorage->find();
     $items = $cursor->toArray();
+    array_map(function ($event) {
+        data_set($event, 'venue', data_get($event, 'venue_id'));
+    },$items);
     
     return response()->json($items);
 });
