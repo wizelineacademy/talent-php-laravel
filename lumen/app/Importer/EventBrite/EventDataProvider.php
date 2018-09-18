@@ -53,7 +53,7 @@ class EventDataProvider implements DataProvider {
                 'url'         => data_get($event, 'url'),
                 'start'       => data_get($event, 'start.utc'),
                 'end'         => data_get($event, 'end.utc'),
-                'thumbnail'   => data_get($event, 'logo.original.url')
+                'image_url'   => data_get($event, 'logo.original.url')
             ];
 
             data_set($newEvent, 'metadata.venue_id', data_get($event, 'venue_id'));
