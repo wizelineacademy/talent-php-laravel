@@ -2,6 +2,7 @@
 
 use MongoDB\Client as MongoClient;
 use App\Importer\Contracts\EventDataProvider;
+use App\Importer\Contracts\VenueDataProvider;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -17,14 +18,5 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/events', function (MongoClient $client) {
-    $eventStorage = $client->test->events;
-    $cursor = $eventStorage->find();
-    $items = $cursor->toArray();
-    
-    return response()->json($items);
-});
+$router->get('/events', 'EventsController@get');
 
-$router->get('/eventbrite', function (EventDataProvider $provider) {
-    return $provider->getByLocation('Guadalajara');
-});
