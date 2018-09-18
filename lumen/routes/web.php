@@ -19,28 +19,19 @@ $router->get('/', function () use ($router) {
 
 $router->get('/events', function (MongoClient $client) {
     $eventStorage = $client->test->events;
-    // $pipeline = array(
-    //     array(
-    //         '$lookup' => array(
-    //             "from"=> 'db.venues',
-    //             "localField"=> 'metadata.venue_id',
-    //             "foreignField"=> 'external_id',
-    //             "as"=> 'venue',
-    //         )
-    //     ),
-    // );
-    // $eventStorage->aggregate($pipeline);
-    $cursor = $eventStorage->find();
-    $items = $cursor->toArray();
-    $args = [
-        'venueStorage'=> $client->test->venues
+    $pipeline = [
+        [
+            '$lookup' => [
+                "from"=> 'venues',
+                "localField"=> 'metadata.venue_id',
+                "foreignField"=> 'external_id',
+                "as"=> 'venue',
+            ],
+        ],
     ];
-    array_walk($items,function ($event,$o,$external){
-        $venue = data_get($external,'venueStorage') -> findOne( [
-            'external_id'=> data_get($event,'metadata.venue_id')
-        ]);
-        data_set($event,'venue',$venue);
-    },$args);
+    
+    $cursor = $eventStorage->aggregate($pipeline);
+    $items = $cursor->toArray();
 
     $formated = [
         'total'=> 50,
