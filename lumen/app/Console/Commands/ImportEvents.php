@@ -14,8 +14,6 @@ class ImportEvents extends Command {
 
     protected $eventDataProvider;
 
-    protected $thePage;
-
     public function __construct(EventDataProvider $eventDataProvider ) {
         parent::__construct();
         $this->eventDataProvider = $eventDataProvider;
@@ -24,20 +22,17 @@ class ImportEvents extends Command {
 
     public function handle() {
         $location = $this->argument('location');
-        
-        $bdData = $this->eventDataProvider->getByLocation($location,1);
+        $page=1;
+       do {
+        $bdData = $this->eventDataProvider->getByLocation($location,$page);
         $this->thePage =data_get($bdData,"pagination.page_number");
-       while (data_get($bdData,"pagination.has_more_items")) {
             foreach ($bdData['events'] as $event) {
-            
                 dispatch(new \App\Jobs\ImportEvent($event));
                 $vid = data_get($event,"metadata.venue_id");
                 $venue = $this->eventDataProvider->getByID($vid);
                 dispatch(new \App\Jobs\ImportVenue($venue));  
-                    
             }
-            $this->thePage=data_get($bdData,"pagination.page_number")+1;
-            $bdData = $this->eventDataProvider->getByLocation($location,$this->thePage);
-        }
+            $page++;
+        }while (data_get($bdData,"pagination.has_more_items"));
     }
 }
