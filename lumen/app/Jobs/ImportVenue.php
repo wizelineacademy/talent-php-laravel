@@ -19,8 +19,8 @@ class ImportVenue extends Job
      */
     public function __construct($venueId)
     {
-       
         $this->venueId = $venueId;
+        
         //$this->venueDataProvider = $venueDataProvider;
     }
 
