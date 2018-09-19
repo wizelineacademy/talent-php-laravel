@@ -17,9 +17,9 @@ class ImportVenue extends Job
      *
      * @return void
      */
-    public function __construct($venueId)
+    public function __construct($venue)
     {
-        $this->venueId = $venueId;
+        $this->venue = $venue;
         
         //$this->venueDataProvider = $venueDataProvider;
     }
@@ -32,9 +32,14 @@ class ImportVenue extends Job
     public function handle(MongoClient $client)
     {
         $venueStorage = $client->test->venues;
-
-        $toImport = $this->venue;
-        $venue = $this->venueId;
-        return $venueStorage->insertOne($venue);
+        $theVenue = $venueStorage->findOne([
+            'external_id'=> data_get($this->venue,'external_id'),
+        ]);
+        // $toImport = $this->venue;
+        if (empty($theVenue)) {
+            $venue = $this->venue;
+            return $venueStorage->insertOne($venue);
+        }
+        
     }
 }

@@ -42,8 +42,6 @@ class ImportEvent extends Job
             $venueId = data_get($toImport, 'metadata.venue_id');
            
             return $eventStorage->insertOne($toImport);
-            // $venue = $this->venueDataProvider->getByID($venueId);
-            //dispatch(new ImportVenue($venueId)); 
         }
     }
 }
