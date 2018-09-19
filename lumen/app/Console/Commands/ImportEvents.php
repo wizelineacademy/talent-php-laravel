@@ -22,15 +22,6 @@ class ImportEvents extends Command {
 
     public function handle() {
         $location = $this->argument('location');
-        
-<<<<<<< HEAD
-        $events = $this->eventDataProvider->getByLocation($location);
-
-        foreach ($events as $event) {
-            dispatch(new \App\Jobs\ImportEvent($event));
-        }
-=======
         dispatch(new ImportLocation($location));
->>>>>>> Finished project
     }
 }
