@@ -13,16 +13,17 @@ class EventDataProvider implements DataProvider {
         $this->client = $client;
     }
 
-    public function getByLocation(string $location) {
+    public function getByLocation(string $location, int $page) {
         $response = $this->client->get('events/search', [
             'query' => [
-                'location.address' => $location
+                'location.address' => $location,
+                'page'=> $page,
             ]
         ]);
 
         $responseData = json_decode($response->getBody()->getContents());
 
-        return array_map(function ($event) {
+        $theEvents= array_map(function ($event) {
             $newEvent = [
                 'external_id' => data_get($event, 'id'),
                 'name' => data_get($event, 'name.text'),
@@ -36,6 +37,15 @@ class EventDataProvider implements DataProvider {
 
             return $newEvent;
         }, $responseData->events);
+
+        $thePagination=$responseData->pagination;
+
+        $toReturn = [
+            'pagination'=>$thePagination,
+            'events'=>$theEvents,
+        ];
+
+        return $toReturn;
     }
 
     public function getByID(string $id) {
