@@ -21,7 +21,6 @@ class ImportVenue extends Job
     {
         $this->venue = $venue;
         
-        //$this->venueDataProvider = $venueDataProvider;
     }
 
     /**
@@ -35,7 +34,7 @@ class ImportVenue extends Job
         $theVenue = $venueStorage->findOne([
             'external_id'=> data_get($this->venue,'external_id'),
         ]);
-        // $toImport = $this->venue;
+        
         if (empty($theVenue)) {
             $venue = $this->venue;
             return $venueStorage->insertOne($venue);

@@ -27,9 +27,13 @@ $router->get('/events', function (MongoClient $client) {
                 "foreignField"=> 'external_id',
                 "as"=> 'venue',
             ],
-        ],
+        ]
     ];
-    
+    /* try to get rid of array in venues
+            '$mergeObjects'=>[
+                '$arrayElemAt'=>['$venue',0],
+            ]
+             */
     $cursor = $eventStorage->aggregate($pipeline);
     $items = $cursor->toArray();
 
