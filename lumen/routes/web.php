@@ -1,6 +1,7 @@
 <?php
 
 use MongoDB\Client as MongoClient;
+use Illuminate\Http\Request;
 use App\Importer\Contracts\EventDataProvider;
 /*
 |--------------------------------------------------------------------------
@@ -17,12 +18,38 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/events', function (MongoClient $client) {
+$router->get('/events', function (MongoClient $client,Request $request) {
+    $args  = $request->query->all();
     $eventStorage = $client->test->events;
-    $cursor = $eventStorage->find();
-    $items = $cursor->toArray();
+    $pipeline = [
+        [
+            '$graphLookup' => [
+                "from"=> 'venues',
+                "connectFromField"=> 'metadata.venue_id',
+                "connectToField"=> 'external_id',
+                "as"=> 'venue',
+                "startWith"=> '$metadata.venue_id',
+            ],
+           
+        ],
+        ['$unwind'=>'$venue'],
+    ];
     
-    return response()->json($items);
+    $cursor = $eventStorage->aggregate($pipeline);
+    $items = $cursor->toArray();
+
+
+
+    $spliced_array = array_slice($items, ($args['page']-1)*$args['size'],$args['size']);
+    $formated = [
+        'total'=> count($items),
+        'last_page'=> ceil(count($items)/$args['size']),
+        'current_page'=> intval($args['page']),
+        'size'=> intval($args['size']),
+        'items'=> $spliced_array ,
+    ];
+
+    return response()->json($formated);
 });
 
 $router->get('/eventbrite', function (EventDataProvider $provider) {

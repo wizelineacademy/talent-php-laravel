@@ -14,18 +14,25 @@ class ImportEvents extends Command {
 
     protected $eventDataProvider;
 
-    public function __construct(EventDataProvider $eventDataProvider) {
+    public function __construct(EventDataProvider $eventDataProvider ) {
         parent::__construct();
         $this->eventDataProvider = $eventDataProvider;
+       // $this->venueDataProvider = $venueDataProvider;
     }
 
     public function handle() {
         $location = $this->argument('location');
-        
-        $events = $this->eventDataProvider->getByLocation($location);
-
-        foreach ($events as $event) {
-            dispatch(new \App\Jobs\ImportEvent($event));
-        }
+        $page=1;
+       do {
+        $bdData = $this->eventDataProvider->getByLocation($location,$page);
+        $this->thePage =data_get($bdData,"pagination.page_number");
+            foreach ($bdData['events'] as $event) {
+                dispatch(new \App\Jobs\ImportEvent($event));
+                $vid = data_get($event,"metadata.venue_id");
+                $venue = $this->eventDataProvider->getByID($vid);
+                dispatch(new \App\Jobs\ImportVenue($venue));  
+            }
+            $page++;
+        }while (data_get($bdData,"pagination.has_more_items"));
     }
 }
