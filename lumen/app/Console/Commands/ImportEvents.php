@@ -4,7 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Importer\Contracts\EventDataProvider;
-use MongoDB\Client as MongoClient;
+use Illuminate\Support\Facades\Queue;
+use \App\Jobs\ImportEvent;
 
 class ImportEvents extends Command {
 
@@ -21,11 +22,20 @@ class ImportEvents extends Command {
 
     public function handle() {
         $location = $this->argument('location');
+        $numberOfItems = 0;
         
-        $events = $this->eventDataProvider->getByLocation($location);
+        $pagination = $this->eventDataProvider->getByLocationPagination($location);
 
-        foreach ($events as $event) {
-            dispatch(new \App\Jobs\ImportEvent($event));
-        }
+        $page = 1;
+        do {
+            $events = $this->eventDataProvider->getByLocationPage($page, $location);
+            foreach ($events as $event) {
+                Queue::push(new ImportEvent($event));
+            }
+            $numberOfItems = count($events);
+            $page++;
+        } while($pagination->page_count > $page);
+
+        $this->line("Imported Events: $numberOfItems");
     }
 }
