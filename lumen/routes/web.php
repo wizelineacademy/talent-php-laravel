@@ -38,12 +38,15 @@ $router->get('/events', function (MongoClient $client,Request $request) {
     $cursor = $eventStorage->aggregate($pipeline);
     $items = $cursor->toArray();
 
+
+
+    $spliced_array = array_slice($items, ($args['page']-1)*$args['size'],$args['size']);
     $formated = [
         'total'=> count($items),
         'last_page'=> ceil(count($items)/$args['size']),
         'current_page'=> intval($args['page']),
         'size'=> intval($args['size']),
-        'items'=> $items,
+        'items'=> $spliced_array ,
     ];
 
     return response()->json($formated);
