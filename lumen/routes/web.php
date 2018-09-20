@@ -1,6 +1,7 @@
 <?php
 
 use MongoDB\Client as MongoClient;
+use Illuminate\Http\Request;
 use App\Importer\Contracts\EventDataProvider;
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,8 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('/events', function (MongoClient $client) {
+$router->get('/events', function (MongoClient $client,Request $request) {
+    $args  = $request->query->all();
     $eventStorage = $client->test->events;
     $pipeline = [
         [
@@ -38,9 +40,9 @@ $router->get('/events', function (MongoClient $client) {
 
     $formated = [
         'total'=> count($items),
-        'last_page'=> 4,
-        'current_page'=> 2,
-        'size'=> 50,
+        'last_page'=> ceil(count($items)/$args['size']),
+        'current_page'=> intval($args['page']),
+        'size'=> intval($args['size']),
         'items'=> $items,
     ];
 
