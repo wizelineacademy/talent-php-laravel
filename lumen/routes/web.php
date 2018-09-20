@@ -32,16 +32,12 @@ $router->get('/events', function (MongoClient $client) {
         ],
         ['$unwind'=>'$venue'],
     ];
-    /* try to get rid of array in venues
-            '$mergeObjects'=>[
-                '$arrayElemAt'=>['$venue',0],
-            ]
-             */
+    
     $cursor = $eventStorage->aggregate($pipeline);
     $items = $cursor->toArray();
 
     $formated = [
-        'total'=> 50,
+        'total'=> count($items),
         'last_page'=> 4,
         'current_page'=> 2,
         'size'=> 50,
