@@ -3,12 +3,11 @@
 namespace App\Jobs;
 
 use MongoDB\Client as MongoClient;
-use App\Jobs\ImportEvent;
+use Illuminate\Support\Facades\Queue;
 
 class ImportEvent extends Job
-{   
+{
     protected $event;
-
     /**
      * Create a new job instance.
      *
@@ -37,7 +36,7 @@ class ImportEvent extends Job
         if (empty($event)) {
             $venueStorage = $client->test->venues;
             $venueId = data_get($toImport, 'metadata.venue_id');
-            
+
             $venue = $venueStorage->findOne([
                 'external_id' => $venueId
             ]);
@@ -47,8 +46,10 @@ class ImportEvent extends Job
                 return $eventStorage->insertOne($toImport);
             }
 
-            dispatch(new ImportVenue($venueId));
-            dispatch(new ImportEvent($toImport));
+            Queue::bulk([
+                new ImportVenue($venueId),
+                new ImportEvent($toImport)
+            ]);
         }
     }
 }
