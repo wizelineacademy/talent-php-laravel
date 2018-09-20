@@ -21,13 +21,16 @@ $router->get('/events', function (MongoClient $client) {
     $eventStorage = $client->test->events;
     $pipeline = [
         [
-            '$lookup' => [
+            '$graphLookup' => [
                 "from"=> 'venues',
-                "localField"=> 'metadata.venue_id',
-                "foreignField"=> 'external_id',
+                "connectFromField"=> 'metadata.venue_id',
+                "connectToField"=> 'external_id',
                 "as"=> 'venue',
+                "startWith"=> '$metadata.venue_id',
             ],
-        ]
+           
+        ],
+        ['$unwind'=>'$venue'],
     ];
     /* try to get rid of array in venues
             '$mergeObjects'=>[
