@@ -21,7 +21,7 @@ class VenueDataProvider implements DataProvider {
         $newVenue = [
             'external_id' => $id,
             'source' => 'eventbrite',
-            'name' => data_get($venue, 'name.text'),
+            'name' => data_get($venue, 'name'),
             'address' => data_get($venue, 'address.localized_address_display')
         ];
 
